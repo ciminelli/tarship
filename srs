@@ -1,0 +1,215 @@
+
+System Requirements Specification
+for
+Blimp Project
+Version 2.0 approved
+Prepared by Blimp Team
+Rollins College – Senior Project
+02/01/2015
+ 
+Table of Contents
+Table of Contents	ii
+Revision History	ii
+1.	Introduction	1
+1.1	Purpose	1
+1.2	Document Conventions	1
+1.3	Intended Audience and Reading Suggestions	1
+1.4	Project Scope	1
+1.5	References	1
+2.	Overall Description	1
+2.1	Product Features	1
+2.2	User Classes and Characteristics	1
+2.3	Operating Environment	2
+2.4	Design and Implementation Constraints	2
+2.5	User Documentation	2
+2.6	Assumptions and Dependencies	2
+3.	System Features	2
+3.1	2 Axis Camera Gimbal	2
+3.2	Raspberry Pi Camera Module	3
+    3.3  Raspberry Pi Model A+   ……….. ……………………………………………………...………….3
+4.	External Interface Requirements	3
+4.1	User Interfaces	3
+4.2	Hardware Interfaces	3
+4.3	Software Interfaces	3
+4.4	Communications Interfaces	4
+5.	Other Nonfunctional Requirements	4
+5.1	Safety Requirements	4
+5.2	Security Requirements	4
+5.3	Software Quality Attributes	5
+Appendix A: Glossary	6
+Appendix B: Issues List 	7
+Appendix C: Equipment Documentation	8
+ 
+Revision History
+Name	Date	Reason For Changes	Version
+			
+			
+
+
+ 
+1.	Introduction
+1.1	Purpose 
+This document defines the System Requirements Specification (SRS) for the Tarship (Blimp). The purpose of this project is to build a non-rigid floating airship that will be controlled through a dedicated wireless network from a laptop. The blimp will take live video that will be streamed to a ground station controlled by the Rollins Athletic Department for athletic events.  
+1.2	Intended Audience and Reading Suggestions
+This document is intended for future programmers that would like to modify or upgrade our system or anyone else that would like to develop a similar project. This could include developers, potential computer science students, and faculty from other universities. 
+1.3	Project Scope
+To construct a high quality Blimp airship that will stream live aerial video of Rollins events. The material will be purchased separately for better assembly options. A custom software package will also be developed to control the blimp through a dedicated wireless network. The project shall incorporate a pan/tilt camera gimbal. This gimbal shall be of the micro variety as weight will be an issue.
+1.4	References
+Richard James
+2.	Overall Description
+2.1	Product Features
+The Tarship will be able to stream video with resolutions up to 1080p at 30 frames per second and 5MP photos with a resolution of 2592x1944 pixels. The video can be recorded and streamed simultaneously from the airship to provide a live stream at the event, and also preserve a back up of the footage for the Rollins website and social media. The recording of streamed video will need to be performed through an external capture card and saved to a local file on the operating computer. This capture card is outside of the scope of this project and will need to be provided by others. The camera will be on a 2 axis gimbal system that will provide pan and tilt controls in order to angle the camera independently from the blimp. 
+2.2	User Classes and Characteristics
+Athletic department staff: The user will be able to control the airship, and stream video through a dedicated wireless network. 
+2.3	Operating Environment
+The blimp will be designed strictly for indoor use, inside of a gym, atrium, or any relevant open indoor space. The blimp will be able to fly anywhere from ground level up to the ceiling, provided to operator takes care to avoid contact with outside or hanging objects that may puncture the blimp.
+
+
+The system will run on a linux Debian Raspberry Pi machine. Debian ARM architecture ports, but not the Debian ARMhf architecture ports, since these are compiled for ARMv7 and the Raspberry Pi CPU is ARMv6.
+2.4	Design and Implementation Constraints
+•	Weight lifting capabilities. Weight capacity is only 12 ounces.
+•	Battery capacity
+•	WiFi range
+•	Inside use only
+ 
+2.5	User Documentation
+•	Manual for blimp control for mac
+•	Manual for blimp control for pc
+•	Manual for blimp camera for IOS/Android
+
+The document will be created in PDF.
+
+2.6	Assumptions and Dependencies
+•	We are assuming there are no hanging objects interfering with the airship movement.
+•	We are assuming there is no ground interference.
+•	We are assuming there is infrastructure at the desired flight location for the system.
+•	We are assuming that the blimp will be flown indoors and away from air conditioning vents, fans, and any other atmospheric obstructions.
+
+3.	System Features
+3.1	2 Axis Camera Gimbal
+•	The 2 axis camera gimbal provides the important function of changing the camera angle independently from the orientation of the blimp. This allows the blimp to be flown and maneuvered while the camera angle is controlled independently to attain the best shots and angles possible. 
+3.2	 Raspberry Pi Camera
+
+•	Manufacturer documentation will be provided in appendix D
+3.3	Raspberry Pi A+
+
+•	Manufacturer documentation will be provided in appendix D
+
+
+
+4.	External Interface Requirements
+4.1	User Interfaces
+A user interface will be created that shows collective power, left motor power, right motor power, heading indicator, camera X position camera Y position, axle position, and video stream. The GUI shall contain flying and camera usage instructions for the new flight captain. These instructions will provide the captain with clear instructions on the necessary key commands to fly the Tarship.
+4.2	Hardware Interfaces
+•	The use of an external dedicated wireless network shall be utilized. This network shall    consist of dedicated wireless router and WIFI card that is installed into the Raspberry Pi for communications. 
+
+•	The Raspberry Pi camera is an external camera that plugs directly into the Raspberry Pi mother board. The camera uses a 12 inch ribbon cable for communication to the mother board.
+
+•	The host computer shall be capable of a wireless connection to the provided router. This connection is necessary for controlling the Tarship in any fashion. 
+
+4.3	Software Interfaces
+•	To control the blimp, an interface written in Java was implemented. It uses SWT for the overall structure and flight instruments from Nebula and Draw2d. A Lightweight System is used to create a bridge between SWT and Draw2d. The user operates the interface using the keys specified in the instructions pane of the window.
+
+•	The interface communicates with the Raspberry Pi server through a controller that uses JSON-RPC to send commands over the network. The JSON-RPC requests take the form of a command and parameters if needed and are used to send and receive all information to and from the blimp.
+
+
+•	A thread that listens for servo-related keystrokes (axle & camera controls) is used to send singular requests at a fixed rate to move each servo one position at a time, effectively creating a smooth movement while a control key is being held.
+ 
+•	The server on the Raspberry Pi was written in python. It uses a Simple JSON-RPC Server to receive commands from the controller. To control the motors it uses GPIO signals at a specific frequency to adjust speed. Servoblaster is used to drive the servos at percentage positions within the specified upper and lower limits. It also uses the Python socket library to get its own IP address on the network.
+
+•	State control was used in both the server and interface to ensure no requests would interfere with each other. 
+
+4.4	Communications Interfaces
+•	The wireless connection is 802.11N WIFI protocol. This is the universally recognized standard protocol for a WIFI connection at the time this SRS was written. 
+•	There is no encryption being utilized in the communication of the Tarship.
+
+5.	Other Nonfunctional Requirements
+
+5.1	Safety Requirements
+•	One should not place any fingers or other body part into the props of the Tarship. Resulting lacerations or contusions may occur.
+•	One should also keep hair and loose fitting clothing away from props for possible entanglement
+•	Batteries should be charged in cool dry location. Possible overheating of batteries could cause combustion and or fire.
+ 
+5.2	Security Requirements
+•	The router implements the use of a username and password for the protection of the wireless network. 
+•	The Raspberry Pi implements the use of a username and password for the protection of the Raspberry Pi.
+•	Gaining access to the Raspberry Pi can be done through the wireless secure shell (ssh) or one must connect a powered USB hub, mouse, keyboard and monitor through a hdmi cable. 
+5.3	Software Quality Attributes
+•	GStreamer application was used for the video streaming. GStreamer is an open source multimedia framework application. This application consists of a library for construction graphs and medial handling components. The latest version of GStreamer was used for this project. The GStreamer server version is 1.0 and the GStreamer client version is 1.5
+•	The Raspberry Pi server code was written in Python version 3.4.3. 
+•	This software is bad ass!
+•	The User interface was written with JDK 1.8 for OSX. Java is a cross platform language that should easily bridge from one machine to another. 
+ 
+
+Appendix A: Glossary
+1.	Tarship – Reference to the blimp as a whole ( bag and gondola )
+2.	Gondola – Reference to the lower portion of the Tarship. This portion houses the Raspberry Pi, motor controller, gimbal and servos as well as the batteries.
+3.	Battery – The rechargeable power source used to power the Tarship and all of its peripheral devices.
+4.	Raspberry Pi – The main control unit of the Tarship. This is where all of the operating code resides.
+5.	Gimbal – The motorized portion of the camera mount. This provides the camera with its pan/tilt functionality.
+6.	Axle – This is the carbon fiber tube that contains the wiring to the left and right motors. It also has the two motors affixed to it.
+7.	Servo – A small motor that is used to control specific features within the Tarship. There is one servo used to control, one servo is used to control the pan feature of the camera, one servo is used to control the tile feature of the camera.
+8.	Camera - Small video device affixed to the gimbal used to steam live video back to the host computer.
+9.	Server – The code that was written to control the Tarship and its associated features. This code allows communication between the Tarship and the host computer.
+10.	Micro USB – The type of memory that us utilized by the Raspberry Pi model A+.
+11.	GUI – The user interface used to control the Tarship. 
+12.	SSH – Secure Shell, connection made through the terminal window of a Mac computer. SSH can be used from a windows machine with the installation of third party software.
+ 
+Appendix B: Issues List
+1.	The Tarship does loose connectivity to the raspberry Pi server periodically. This loss of connection will render the Tarship temporarily uncontrollable. We have implemented an auto connection method within the code but instances have occurred where total loss of connection has occurred for an extended period of time. Our intent was to implement a “kill” method that upon loss of server connection for a predetermined amount of time the Tarship would automatically return to the ground. This type of method could prove to be inconvenient as when the method is called the Tarship will return to the ground and could interrupt the ongoing event.
+2.	The Tarship is designed to be flown indoors ONLY. We have tested the ship in outdoor conditions and the performance of the Tarship is highly unpredictable. Low winds affect its controllability greatly.
+3.	The Tarship is designed at this time to work only on the dedicated wireless network that was specifically designed for this project. The Tarship could be used on another public wireless network but the code that is used to auto connect the Tarship to the server would have to be modified to accept that networks ip address schema. This is not recommended.
+4.	At the time this document was created the code has not been tested on any other machine than a Mac, We do not expect the transfer of the jar file to be difficult since the server code was written in Java.
+
+
+
+
+
+
+
+
+
+
+
+
+Appendix C: Equipment Documentation
+•	Camera Module
+•	Raspberry Pi Model A+
+•	Dual h Module Arduino L289N Motor Controller
+•	Edimax Wi-Fi nano adaptor
+•	Nano-Tech Airsoft 7.4 v 1400mh battery
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
