@@ -9,7 +9,6 @@
 
 
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
-from multiprocessing import Process, Queue
 import RPi.GPIO as GPIO
 import socket
 import time
